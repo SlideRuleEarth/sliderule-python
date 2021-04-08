@@ -492,7 +492,7 @@ def toregion (geojson, as_file=True):
         geo_dict = json.loads(geojson)
     
     # pull out coordinates #
-    coordinates = geo_dict["features"][0]["geometry"]["coordinates"][0][0]
+    coordinates = geo_dict["features"][0]["geometry"]["coordinates"][0]
 
     # de-duplicate #
     nodup_coords = []
