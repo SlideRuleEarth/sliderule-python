@@ -1,5 +1,9 @@
 See example: https://joss.readthedocs.io/en/latest/submitting.html#example-paper-and-bibliography
 
+Can generate pdf preview here: https://whedon.theoj.org/
+* repo: https://github.com/ICESat2-SlideRule/sliderule-python
+* branch: paper
+
 SlideRule docs: https://github.com/ICESat2-SlideRule/sliderule-project/tree/main/rtd
 
 ---
@@ -11,31 +15,53 @@ tags:
   - Glacier
   - Earth observation
 authors:
-  - name: J.P. Swinski^[co-first author] # note this makes a footnote saying 'co-first author'
+  - name: J.P. Swinski #^[co-first author] # note this makes a footnote saying 'co-first author'
     orcid: 0000-0000-0000-0000
-    affiliation: "1, 2" # (Multiple affiliations must be quoted)
-  - name: Author Without ORCID^[co-first author] # note this makes a footnote saying 'co-first author'
-    affiliation: 2
-  - name: Author with no affiliation^[corresponding author]
-    affiliation: 3
+    affiliation: 1 
+  - name: David Shean 
+    orcid: 0000-0003-3840-3860
+    affiliation: "2, 5" 
+  - name: Ben Smith 
+    affiliation: 4 
+  - name: Tyler Sutterley 
+    affiliation: 4 
+  - name: Scott Henderson 
+    affiliation: "3, 5" 
+  - name: Carlos Ugarte 
+    affiliation: 1 
+  - name: Thomas Neumann 
+    affiliation: 1 
 affiliations:
  - name: NASA Goddard Space Flight Center
    index: 1
- - name: University of Washington
+ - name: University of Washington, Department of Civil and Environmental Engineering
    index: 2
+ - name: University of Washington, Department of Earth and Space Sciences 
+   index: 3
+ - name: University of Washington, Applied Physics Laboratory 
+   index: 4
+ - name: University of Washington, eScience Institute 
+   index: 5
+
 date: 1 March 2022
 bibliography: paper.bib
 ---
 
 # Summary 
 
-SlideRule is a server-side framework implemented in C++/Lua that provides REST APIs for processing science data and returning results. This enables researchers and other data systems to have low-latency access to custom-generated data products using processing parameters supplied at the time of the request. SlideRule runs in AWS and uses the official lower-level ICESat-2 datasets hosted by the NSIDC to generate higher-level analysis-ready prodducts. The sliderule-python client enables easy interaction with SlideRule. This software was developed to support science applications for the NASA Ice Cloud and land Elevation Satellite-2 (ICESat-2), but also has the goal of demonstrating a new paradigm for providing science data products to researchers.
+SlideRule is a server-side framework for on-demand processing of science data. This enables researchers and other data systems to have low-latency access to custom-generated, high-level, analysis-ready data products using processing parameters supplied at the time of the request. The sliderule-python client enables easy interaction with SlideRule. The Sliderule project has the goal of demonstrating a new paradigm for providing science data products to researchers.
+
+The ICESat-2 SlideRule software is plug-in for the SlideRule framework to support science applications for the NASA Ice Cloud and land Elevation Satellite-2 (ICESat-2) mission. We implemented a simplified, cloud-optimized version of the ATL06 algorithm to process the official lower-level ATL03 photon data products hosted by NASA NSIDC on AWS. The user can specify several key algorithm parameters, and select subsets of classified photons to process. Custom data products are returned in seconds to minutes, enabling rapid parameter iteration, and subsequent scientific analysis, visualization, and output of archive-ready files for reproducible science.  
 
 # Statement of need
 
 Need to fill this in...
 
 ATL03 products [@neumann2019ice]
+
+# SlideRule Framework
+Implemented in C++/Lua
+REST API
 
 # Algorithm Description
 
