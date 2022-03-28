@@ -44,7 +44,7 @@ try:
 except ModuleNotFoundError as e:
     sys.stderr.write("Warning: missing packages, some functions will throw an exception if called. (%s)\n" % (str(e)))
 
-# attributes for ATL06-SR variables
+# attributes for ATL06-SR and ATL03 variables
 def get_attributes(**kwargs):
     # set default keyword arguments
     kwargs.setdefault('lon_key','longitude')
@@ -105,7 +105,6 @@ def get_attributes(**kwargs):
     # along track slope
     attrs['dh_fit_dx'] = {}
     attrs['dh_fit_dx']['units'] = "meters/meters"
-    attrs['dh_fit_dx']['contentType'] = "modelResult"
     attrs['dh_fit_dx']['long_name'] = "Along Track Slope"
     attrs['dh_fit_dx']['coordinates'] = coordinates
     # across track slope
@@ -135,6 +134,8 @@ def get_attributes(**kwargs):
     # RGT
     attrs['rgt'] = {}
     attrs['rgt']['long_name'] = "Reference Ground Track"
+    attrs['rgt']['valid_min'] = 1
+    attrs['rgt']['valid_max'] = 1387
     attrs['rgt']['coordinates'] = coordinates
     # ground track
     attrs['gt'] = {}
@@ -144,7 +145,7 @@ def get_attributes(**kwargs):
     attrs['gt']['valid_min'] = 10
     attrs['gt']['valid_max'] = 60
     attrs['gt']['coordinates'] = coordinates
-    # ground track
+    # along-track distance
     attrs['distance'] = {}
     attrs['distance']['units'] = "meters"
     attrs['distance']['long_name'] = "Along track distance from equator"
@@ -152,20 +153,99 @@ def get_attributes(**kwargs):
     # spot
     attrs['spot'] = {}
     attrs['spot']['long_name'] = "ATLAS spot number"
-    attrs['spot']['coordinates'] = "latitude longitude"
     attrs['spot']['valid_min'] = 1
     attrs['spot']['valid_max'] = 6
     attrs['spot']['coordinates'] = coordinates
     # pflags
     attrs['pflags'] = {}
     attrs['pflags']['long_name'] = "Processing Flags"
-    attrs['pflags']['coordinates'] = "latitude longitude"
     attrs['pflags']['flag_values'] = [0, 1, 2, 4]
     attrs['pflags']['flag_meanings'] = ("valid, spread too short, "
         "too few photons, max iterations reached")
     attrs['pflags']['valid_min'] = 0
     attrs['pflags']['valid_max'] = 4
     attrs['pflags']['coordinates'] = coordinates
+    # ATL03 specific variables
+    # segment_dist
+    attrs['segment_dist'] = {}
+    attrs['segment_dist']['units'] = 'meters'
+    attrs['segment_dist']['long_name'] = ("Along track distance "
+        "from equator for segment")
+    attrs['segment_dist']['coordinates'] = coordinates
+    # distance
+    attrs['distance'] = {}
+    attrs['distance']['units'] = 'meters'
+    attrs['distance']['long_name'] = ("Along track distance "
+        "from segment center")
+    attrs['distance']['coordinates'] = coordinates
+    # sc_orient
+    attrs['sc_orient'] = {}
+    attrs['sc_orient']['long_name'] = "Spacecraft Orientation"
+    attrs['sc_orient']['flag_values'] = [0, 1, 2]
+    attrs['sc_orient']['flag_meanings'] = "backward forward transition"
+    attrs['sc_orient']['valid_min'] = 0
+    attrs['sc_orient']['valid_max'] = 2
+    attrs['sc_orient']['coordinates'] = coordinates
+    # track
+    attrs['track'] = {}
+    attrs['track']['long_name'] = "Pair track identifier"
+    attrs['track']['flag_values'] = [1, 2, 3]
+    attrs['track']['flag_meanings'] = "PT1, PT2, PT3"
+    attrs['track']['valid_min'] = 1
+    attrs['track']['valid_max'] = 3
+    attrs['track']['coordinates'] = coordinates
+    # pair
+    attrs['pair'] = {}
+    attrs['pair']['long_name'] = "left-right identifier of pair track"
+    attrs['pair']['flag_values'] = [0, 1]
+    attrs['pair']['flag_meanings'] = "left, right"
+    attrs['pair']['valid_min'] = 1
+    attrs['pair']['valid_max'] = 3
+    attrs['pair']['coordinates'] = coordinates
+    # photon height
+    attrs['height'] = {}
+    attrs['height']['units'] = "meters"
+    attrs['height']['long_name'] = "Photon Height"
+    attrs['height']['coordinates'] = coordinates
+    # photon height
+    attrs['height'] = {}
+    attrs['height']['units'] = "meters"
+    attrs['height']['long_name'] = "Photon Height"
+    attrs['height']['coordinates'] = coordinates
+    # quality_ph
+    attrs['quality_ph'] = {}
+    attrs['quality_ph']['long_name'] = "Photon Quality"
+    attrs['quality_ph']['flag_values'] = [0, 1, 2, 3]
+    attrs['quality_ph']['flag_meanings'] = ("nominal possible_afterpulse "
+        "possible_impulse_response_effect possible_tep")
+    attrs['quality_ph']['valid_min'] = 1
+    attrs['quality_ph']['valid_max'] = 3
+    attrs['quality_ph']['coordinates'] = coordinates
+    # atl03_cnf
+    attrs['atl03_cnf'] = {}
+    attrs['atl03_cnf']['long_name'] = "Photon Signal Confidence"
+    attrs['atl03_cnf']['flag_values'] = [-2, 1, 0, 1, 2, 3, 4]
+    attrs['atl03_cnf']['flag_meanings'] = ("possible_tep "
+        "not_considered noise buffer low medium high")
+    attrs['atl03_cnf']['valid_min'] = -2
+    attrs['atl03_cnf']['valid_max'] = 3
+    attrs['atl03_cnf']['coordinates'] = coordinates
+    # atl08_class
+    attrs['atl08_class'] = {}
+    attrs['atl08_class']['long_name'] = "ATL08 Photon Classification"
+    attrs['atl08_class']['flag_values'] = [0, 1, 2, 3, 4]
+    attrs['atl08_class']['flag_meanings'] = ("noise "
+        "ground canopy top_of_canopy unclassified")
+    attrs['atl08_class']['valid_min'] = 0
+    attrs['atl08_class']['valid_max'] = 4
+    attrs['atl08_class']['coordinates'] = coordinates
+    # yapc_score
+    attrs['yapc_score'] = {}
+    attrs['yapc_score']['units'] = "1"
+    attrs['yapc_score']['long_name'] = "YAPC Photon Weight"
+    attrs['yapc_score']['valid_min'] = 0
+    attrs['yapc_score']['valid_max'] = 255
+    attrs['yapc_score']['coordinates'] = coordinates
     # return the attributes for the sliderule variables
     return attrs
 
