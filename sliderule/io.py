@@ -249,6 +249,25 @@ def get_attributes(**kwargs):
     # return the attributes for the sliderule variables
     return attrs
 
+# PURPOSE: encoder for creating the file attributes
+def attributes_encoder(attr):
+    """Custom encoder for creating file attributes in Python 3"""
+    if isinstance(attr, (bytes, bytearray)):
+        return attr.decode('utf-8')
+    if isinstance(attr, (np.int_, np.intc, np.intp, np.int8, np.int16, np.int32,
+        np.int64, np.uint8, np.uint16, np.uint32, np.uint64)):
+        return int(attr)
+    elif isinstance(attr, (np.float_, np.float16, np.float32, np.float64)):
+        return float(attr)
+    elif isinstance(attr, (np.ndarray)):
+        return attr.tolist()
+    elif isinstance(attr, (np.bool_)):
+        return bool(attr)
+    elif isinstance(attr, (np.void)):
+        return None
+    else:
+        return attr
+
 # calculate centroid of polygon
 def centroid(x,y):
     npts = len(x)
@@ -300,25 +319,6 @@ def from_geodataframe(gdf):
         regions.append([{'lon':ln,'lat':lt} for ln,lt in geometry.exterior.coords])
     # return the list of regions
     return regions
-
-# PURPOSE: encoder for creating the file attributes
-def attributes_encoder(attr):
-    """Custom encoder for creating file attributes in Python 3"""
-    if isinstance(attr, (bytes, bytearray)):
-        return attr.decode('utf-8')
-    if isinstance(attr, (np.int_, np.intc, np.intp, np.int8, np.int16, np.int32,
-        np.int64, np.uint8, np.uint16, np.uint32, np.uint64)):
-        return int(attr)
-    elif isinstance(attr, (np.float_, np.float16, np.float32, np.float64)):
-        return float(attr)
-    elif isinstance(attr, (np.ndarray)):
-        return attr.tolist()
-    elif isinstance(attr, (np.bool_)):
-        return bool(attr)
-    elif isinstance(attr, (np.void)):
-        return None
-    else:
-        return attr
 
 # output request parameters to JSON
 def to_json(filename, **kwargs):
