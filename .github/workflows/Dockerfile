@@ -21,7 +21,7 @@ RUN apt-get update -y && \
 ENV JOBS 2
 
 ENV CFLAGS="-fPIC"
-ENV ZLIB_VERSION=1.2.11
+ENV ZLIB_VERSION=1.2.12
 RUN wget -q http://zlib.net/zlib-${ZLIB_VERSION}.tar.gz && \
     tar -xzf zlib-${ZLIB_VERSION}.tar.gz && \
     cd zlib-${ZLIB_VERSION} && \
@@ -212,6 +212,7 @@ RUN pip3 install --no-cache-dir \
         geopandas \
         h5py \
         ipykernel \
+        ipympl \
         ipywidgets \
         ipyleaflet \
         jupyterlab==3 \
@@ -219,13 +220,13 @@ RUN pip3 install --no-cache-dir \
         matplotlib \
         numpy \
         pandas \
-        pyproj \
         requests \
         scipy \
         setuptools_scm \
         shapely \
         tables \
         tk \
+        traitlets \
         xyzservices
 
 COPY . .
