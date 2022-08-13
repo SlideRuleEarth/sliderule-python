@@ -76,20 +76,19 @@ The OpenAltimetry platform [@khalsa2020openaltimetry], which is related to the O
 
 [`captoolkit`](https://github.com/nasa-jpl/captoolkit) (Cryosphere Altimetry Processing Toolkit) [@fernando_paolo_2020_3665785] is a software library from the NASA Jet Propulsion Library (JPL). `captoolkit` allows users to estimate elevation change using altimetry data from multiple airborne and satellite missions.`captoolkit` has functions to apply geophysical corrections, calculate elevation change, and interpolate into gridded fields. `captoolkit` is built for processing on High Performance Computing (HPC) clusters by subsetting datasets into smaller granules and using parallelized functions. 
 
-# SlideRule Framework
+# SlideRule framework
 SlideRule is a C++/Lua framework for on-demand data processing (\autoref{fig:architecture}). It is a science data processing service that runs in the cloud and responds to REST API calls to process and return science results.
 
 ![SlideRule architecture.\label{fig:architecture}](./sliderule_architecture.png)
 
-# Algorithm Description
 The ICESat-2-slideRule API provides two main types of services. The first provides access to existing ICESat-2 products stored as cloud assets, the second provides a customized level-2 product (ATL06-SR) generated on demand from the ATL03 cloud assets.
 
-### ATL03 photon-data access
+### ATL03 data access
 SlideRule provides services that allow users to access ATL03 photon-height and classification data from cloud assets without the need to download entire granules, returning the subset of ATL03 parameters that are needed to interpret surface heights from the photon-height distribution.
 
 For vegetated surfaces, a more advanced photon classification scheme has been made available as part of the ATL08 Land and Vegetation Height product [@neuenschwander2019atl08]. This classification approach allows improved segregation between photons returned from vegetation, photons that reflected from land surfaces, and noise. Users wishing to apply this classification to ATL03 data would ordinarily need to download both an ATL03 granule and the corresponding ATL08 granule, and apply the classification from ATL08 to ATL03. The ICESat-2 slideRule API includes an option to retrieve the photon classifications from ATL08 cloud assests, and apply them directly to ATL03 photons for subsequent processing.
 
-## ATL06-SR
+### ATL06-SR algorithm
 The ATL06 (land-ice height) product provided by NASA's ICESat-2 [@smith2019land] (hereafter "ATL06-legacy") provides estimates of surface height derived from ATL03 photon height using an algorithm adapted to the flat surfaces and high reflectivities common over polar ice sheets. Briefly, the algorithm uses photons identified as likely surface returns by the ATL03 photon classification, or by a backup algorithm where the ATL03 classification fails, to estimate the height and slope of 40-meter-long line segments for data from each of ICESat-2's ground tracks. It uses an iterative algorithm to improve the initial photon classification, and calculates a set of corrections based on the residuals between the segment heights and the selected photon heights to correct for sub-centimeter biases in the resulting height estimates.
 
 ATL06-SR implements much of the ATL06-legacy algorithm in a framework that allows customization of the initial photon classification, the resolution and posting of the product, and the filtering strategy used to identify valid segments. For the sake of simplicity and speed of calculation, ATL06-SR omits some of the corrections required for sub-centimeter accuracy over polar surfaces, including the first-photon bias and pulse-shape corrections [@smith2019land]. Over non-polar surfaces, omitting these biases should result in sub-centimeter vertical errors in ATL06-SR heights.
@@ -98,9 +97,9 @@ One important difference between the ATL06-legacy and ATL06-SR algorithms is in 
  
 ### Photon classification 
 The ATL06-SR algorithm supports three sources of photon classification data (\autoref{fig:classification}): 
-- ATL03 photon confidence values, based on algorithm-specific classification types for land, ocean, sea-ice, land-ice, or inland water [@neumann2019ice]
-- ATL08 photon classification [@neuenschwander2019atl08]
-- YAPC (Yet Another Photon Classification) photon-density-based classification [@tyler_sutterley_2022_6717591]
+  - ATL03 photon confidence values, based on algorithm-specific classification types for land, ocean, sea-ice, land-ice, or inland water [@neumann2019ice]
+  - ATL08 photon classification [@neuenschwander2019atl08]
+  - YAPC (Yet Another Photon Classification) photon-density-based classification [@tyler_sutterley_2022_6717591]
 
 ![Example SlideRule output of classified ATL03 photons and corresponding ATL06-SR points.\label{fig:classification}](./sliderule_classification.png)
 
