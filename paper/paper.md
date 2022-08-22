@@ -55,13 +55,13 @@ The ATL03 data granules are stored as ~1-2 GB HDF5-format files containing ~20-1
 
 `SlideRule` offers a solution to these issues, allowing users to create on-demand products with the vetted ATL06 algorithm, but with adjustable parameters and photon classification strategies tailored to the characteristics of their application and study sites.
 
-# State of the field
+## State of the field
 The current paradigm for ICESat-2 data access involves downloading large volumes of standard data products from a NASA Distributed Active Archive Center (DAAC), then writing custom routines to prepare those products for analysis. The National Snow and Ice Data Center (NSIDC) offers data discovery and limited subsetting services, allowing users to request and download products for a user-specified geographic area with a user-defined subset of returned variables [@atl03_nsidc]. Even with these subsetting services, the full workflow to request, stage, and download hundreds of products can take several minutes to hours, especially for larger areas, and these services do not currently support custom server-side data processing.
 
-## On-demand data processing
+### On-demand data processing
 Several projects are exploring on-demand, cloud-based processing for satellite and/or point cloud data. For example, the Alaska Satellite Facility's Hybrid Pluggable Processing Pipeline (ASF HyP3) enables custom processing of satellite SAR images from multiple missions [@hogenson_kirk_2020_6917373]. The [OpenTopography project](https://opentopography.org/) offers "Web service-based data access, processing, and analysis capabilities that are scalable, extensible, and innovative" with emphasis on "high-resolution (meter to sub-meter scale), Earth science-oriented, topography data acquired with LiDAR and other technologies." The current processing options and data products are focused on airborne LiDAR point clouds, with no plans to support the more complex ICESat-2 data products.
 
-## ICESat-2 packages
+### ICESat-2 packages
 [`icepyx`](https://icepyx.readthedocs.io) is a python library supporting programmatic access to ICESat-2 data through the NASA Common Metadata Repository (CMR) and NSIDC services [@icepyx]. `icepyx` allows for queries based on spatial and temporal parameters, as well as ICESat-2 orbital cycle and Reference Ground Track (RGT). Accessing NSIDC API services through `icepyx` allows users to subset ICESat-2 data and convert data to other file formats. At present, `icepyx` facilitates reading and visualizing data available from NSIDC, but it is not a data processing service.
 
 [`OpenAltimetry`](https://openaltimetry.org) offers discovery, access, and visualization of data from NASA’s ICESat and ICESat-2 missions. This service includes an API that can provide access to either photon-level ATL03 data or derived height variables (e.g., ATL06) for a single reference ground track, but does not offer processing from photons to higher-level products [@khalsa2020openaltimetry].
