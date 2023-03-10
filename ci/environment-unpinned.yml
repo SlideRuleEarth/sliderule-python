@@ -1,8 +1,0 @@
-name: sliderule-ci
-channels:
-  - conda-forge
-dependencies:
-  - python
-  - pip
-  - pytest
-  - fiona

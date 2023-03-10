@@ -27,5 +27,4 @@ dependencies:
   - tk
   - xyzservices
   - pyarrow
-  - pip:
-      - -e ./
+  - sliderule
