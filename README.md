@@ -6,11 +6,13 @@
 
 Example notebooks that use SlideRule's Python client for processing Earth science data.
 
-Detailed [documentation](https://slideruleearth.io/rtd/) on installing and using this client can be found at [slideruleearth.io](https://slideruleearth.io/).
+Detailed [documentation](https://slideruleearth.io/rtd/) on installing and using the SlideRule Python client can be found at [slideruleearth.io](https://slideruleearth.io/).
+
+NOTE: As of 3/10/2023 the source code for SlideRule's Python client has moved to the [sliderule](https://github.com/ICESat2-SlideRule/sliderule) repository. This [sliderule-python](https://github.com/ICESat2-SlideRule/sliderule-python) repository continues to function as a collection of example notebooks that use the SlideRule Python client and demonstrate common workflows.
 
 ### Installing the SlideRule Python Client
 
-The easiest way to install the Sliderule Python client and run the example notebooks is to create a conda environment from the provided `environment.yml` file:
+The easiest way to install the Sliderule Python client and run the example notebooks in this repository is to create a conda environment from the provided `environment.yml` file:
 ```bash
 conda env create -f environment.yml
 ```
@@ -22,10 +24,6 @@ conda install -c conda-forge sliderule
 ```
 
 For alternate methods to install SlideRule, including options for developers, please see the [installation instructions](https://slideruleearth.io/rtd/getting_started/Install.html).
-
-### Dependencies
-
-Basic functionality of sliderule-python depends on `requests` and `numpy`.  But if you intend on running the example notebooks, please refer to the package requirements listed in `environment.yml` for a full list of recommended python libraries.
 
 ### Reference and User's Guide
 
