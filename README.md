@@ -20,7 +20,7 @@ conda env create -f environment.yml
 
 If you have your own conda environment that you want to install the SlideRule Python client into, then:
 ```bash
-conda activate <myenv>
+conda activate sliderule_env
 conda install -c conda-forge sliderule
 ```
 

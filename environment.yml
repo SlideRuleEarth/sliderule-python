@@ -1,5 +1,5 @@
 # conda env create -f environment.yml
-name: sliderule
+name: sliderule_env
 channels:
   - conda-forge
 dependencies:
