@@ -32,14 +32,14 @@ demo-push:
 	docker push $(REPO)/demo-nginx:$(VERSION)
 
 demo-deploy: ## deploy demo using terraform; needs VERSION, DOMAIN
-	cd terraform/demo && terraform init
-	cd terraform/demo && terraform workspace select $(DOMAIN)-demo || terraform workspace new $(DOMAIN)-demo
-	cd terraform/demo && terraform apply -var docker_image_url_demo-client=$(REPO)/demo-client:$(VERSION) -var docker_image_url_demo-nginx=$(REPO)/demo-nginx:$(VERSION) -var domain=$(DOMAIN) -var domain_root=$(DOMAIN_ROOT)
+	cd terraform && terraform init
+	cd terraform && terraform workspace select $(DOMAIN)-demo || terraform workspace new $(DOMAIN)-demo
+	cd terraform && terraform apply -var docker_image_url_demo-client=$(REPO)/demo-client:$(VERSION) -var docker_image_url_demo-nginx=$(REPO)/demo-nginx:$(VERSION) -var domain=$(DOMAIN) -var domain_root=$(DOMAIN_ROOT)
 
 demo-destroy: ## destroy demo using terraform; needs DOMAIN
-	cd terraform/demo && terraform init
-	cd terraform/demo && terraform workspace select $(DOMAIN)-demo || terraform workspace new $(DOMAIN)-demo
-	cd terraform/demo && terraform destroy -var domain=$(DOMAIN) -var domain_root=$(DOMAIN_ROOT)
+	cd terraform && terraform init
+	cd terraform && terraform workspace select $(DOMAIN)-demo || terraform workspace new $(DOMAIN)-demo
+	cd terraform && terraform destroy -var domain=$(DOMAIN) -var domain_root=$(DOMAIN_ROOT)
 
 distclean: ## fully remove all non-version controlled files and directories
 	- rm -Rf $(STAGE)
