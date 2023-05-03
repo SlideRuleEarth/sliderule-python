@@ -14,12 +14,19 @@ Detailed [documentation](https://slideruleearth.io/rtd/) on installing and using
 The easiest way to install the Sliderule Python client and run the example notebooks in this repository is to create a conda environment from the provided `environment.yml` file:
 ```bash
 conda env create -f environment.yml
+conda activate sliderule_env
 ```
 
 If you have your own conda environment that you want to install the SlideRule Python client into, then:
 ```bash
-conda activate sliderule_env
+conda activate my_env
 conda install -c conda-forge sliderule
+```
+
+If you already have the SlideRule Python client installed in a conda environment and want to update to the latest version, then:
+```bash
+conda activate sliderule_env
+conda update -c conda-forge sliderule
 ```
 
 For alternate methods to install SlideRule, including options for developers, please see the [installation instructions](https://slideruleearth.io/rtd/getting_started/Install.html).
