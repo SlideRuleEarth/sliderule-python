@@ -16,6 +16,7 @@ demo-docker: # make the python client demo docker image; needs VERSION
 	cp ../environment.yml $(DEMO_STAGE_DIR)
 	cp voila_demo.ipynb $(DEMO_STAGE_DIR)
 	cp docker/demo/* $(DEMO_STAGE_DIR)
+#	cp -R ../../sliderule $(DEMO_STAGE_DIR) # used to install local copy of client (only if necessary during development, see dockerfile for additional steps)
 	chmod +x $(DEMO_STAGE_DIR)/docker-entrypoint.sh
 	cd $(DEMO_STAGE_DIR) && docker build $(DOCKEROPTS) -t $(REPO)/demo-client:latest .
 	docker tag $(REPO)/demo-client:latest $(REPO)/demo-client:$(VERSION)
