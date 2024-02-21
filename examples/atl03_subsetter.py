@@ -24,16 +24,17 @@ parser.add_argument('--cycle',                type=int, default=None)
 parser.add_argument('--region' ,              type=int, default=None)
 parser.add_argument('--track',                type=int, default=None)
 parser.add_argument('--beam',                 type=str, nargs='+', default=['gt1l', 'gt1r', 'gt2l', 'gt2r', 'gt3l', 'gt3r'])
-parser.add_argument('--cnf',                  type=int, default=None)
+parser.add_argument('--pass_invalid',         action='store_true', default=False)
+parser.add_argument('--cnf',                  type=int, default=icesat2.CNF_NOT_CONSIDERED)
 parser.add_argument('--ats',                  type=int, default=None)
 parser.add_argument('--cnt',                  type=int, default=None)
 parser.add_argument('--len',                  type=int, default=None)
 parser.add_argument('--res',                  type=int, default=None)
-parser.add_argument('--subset_pixel',         type=float, default=None)
+parser.add_argument('--subset_pixel_size',    type=float, default=None)
 parser.add_argument('--proj',                 type=str, default=None)
 parser.add_argument('--ignore_poly_for_cmr',  type=bool, default=None)
 parser.add_argument('--name',                 type=str, default='output')
-parser.add_argument('--as_geo',         '-g', action='store_true', default=False)
+parser.add_argument('--no_geo',               action='store_true', default=False)
 parser.add_argument('--output_path',    '-p', type=str, default="s3://sliderule/data/stage")
 parser.add_argument('--timeout',        '-t', type=int, default=600) # seconds
 parser.add_argument('--generate',             action='store_true', default=False)
@@ -41,6 +42,7 @@ parser.add_argument('--simulate_delay',       type=float, default=1)
 parser.add_argument('--startup_wait',         type=int, default=120) # seconds
 parser.add_argument('--granules_per_request', type=int, default=None) # None == all granules
 parser.add_argument('--concurrent_requests',  type=int, default=1)
+parser.add_argument('--slice',                type=int, nargs=2, default=None)
 parser.add_argument('--log_file',       '-f', type=str, default="sliderule.log")
 parser.add_argument('--verbose',        '-v', action='store_true', default=False)
 args,_ = parser.parse_known_args()
@@ -59,7 +61,6 @@ logfile.setLevel(logging.INFO)
 home_directory          = os.path.expanduser('~')
 aws_credential_file     = os.path.join(home_directory, '.aws', 'credentials')
 config                  = configparser.RawConfigParser()
-credentials             = {}
 
 # Check Organization
 organization            = args.organization
@@ -69,8 +70,8 @@ if args.organization == "None":
     desired_nodes       = None
 
 # Get Area of Interest
-if args.subset_pixel:
-    region = sliderule.toregion(args.aoi, cellsize=args.subset_pixel)
+if args.subset_pixel_size:
+    region = sliderule.toregion(args.aoi, cellsize=args.subset_pixel_size)
     raster = region["raster"]
 else:
     region = sliderule.toregion(args.aoi)
@@ -86,19 +87,20 @@ parms = {
     "rgt": args.rgt,
     "cycle": args.cycle,
     "region": args.region,
-    "timeout": args.timeout,
+    "pass_invalid": args.pass_invalid,
     "cnf": args.cnf,
     "ats": args.ats,
     "cnt": args.cnt,
     "len": args.len,
     "res": args.res,
+    "timeout": args.timeout,
     "output": {
-        "path": 'none',
+        "path": "",
         "format": "parquet",
-        "as_geo": args.as_geo,
+        "as_geo": not args.no_geo,
         "open_on_complete": False,
         "region": "us-west-2",
-        "credentials": credentials
+        "credentials": {}
     }
 }
 
@@ -112,6 +114,8 @@ for key in keys_to_delete:
 
 # Get Resources
 resources = earthdata.search(parms)
+if args.slice != None:
+    resources = resources[args.slice[0]:args.slice[1]]
 
 # Calculate Requests
 requests = []
@@ -140,7 +144,6 @@ rqst_q = multiprocessing.Queue()
 # Update Credentials
 #
 def update_credentials(worker_id):
-    global credentials
 
     # Log Maintanence Action
     now = datetime.now()
@@ -155,7 +158,7 @@ def update_credentials(worker_id):
 
     # Read AWS Credentials
     config.read(aws_credential_file)
-    credentials = {
+    parms["output"]["credentials"] = {
         "aws_access_key_id": config.get('default', 'aws_access_key_id'),
         "aws_secret_access_key": config.get('default', 'aws_secret_access_key'),
         "aws_session_token": config.get('default', 'aws_session_token')
@@ -168,15 +171,14 @@ def update_credentials(worker_id):
 # Process Request
 #
 def process_request(worker_id, count, resources):
-    global credentials
 
     # Start Processing
     log.info(f'<{worker_id}> processing {len(resources)} resources: {resources[0]} ...')
 
     # Make Request
-    parms["output"]["path"] = f'{args.output_path}/{args.name}_{count}.{"geoparquet" if args.as_geo else "parquet"}'
+    parms["output"]["path"] = f'{args.output_path}/{args.name}_{count}.{"parquet" if args.no_geo else "geoparquet"}'
     if args.generate:
-        outfile = icesat2.atl03sp(parms)
+        outfile = icesat2.atl03sp(parms, resources=resources)
     else:
         outfile = parms["output"]["path"]
         if args.simulate_delay > 0:
@@ -190,7 +192,6 @@ def process_request(worker_id, count, resources):
 # Worker
 #
 def worker(worker_id):
-    global credentials
 
     # Initialize Python Client
     if args.generate:
