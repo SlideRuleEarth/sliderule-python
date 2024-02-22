@@ -35,7 +35,7 @@ parser.add_argument('--proj',                 type=str, default=None)
 parser.add_argument('--ignore_poly_for_cmr',  type=bool, default=None)
 parser.add_argument('--name',                 type=str, default='output')
 parser.add_argument('--no_geo',               action='store_true', default=False)
-parser.add_argument('--output_path',    '-p', type=str, default="s3://sliderule/data/stage")
+parser.add_argument('--output_path',    '-p', type=str, default="s3://sliderule/data/stage") # "hosted" tells sliderule to host results in a bucket it owns
 parser.add_argument('--timeout',        '-t', type=int, default=600) # seconds
 parser.add_argument('--generate',             action='store_true', default=False)
 parser.add_argument('--simulate_delay',       type=float, default=1)
@@ -61,6 +61,12 @@ logfile.setLevel(logging.INFO)
 home_directory          = os.path.expanduser('~')
 aws_credential_file     = os.path.join(home_directory, '.aws', 'credentials')
 config                  = configparser.RawConfigParser()
+
+# Check for Hosted Option
+if args.output_path == "hosted":
+    credentials = None
+else:
+    credentials = {}
 
 # Check Organization
 organization            = args.organization
@@ -100,7 +106,7 @@ parms = {
         "as_geo": not args.no_geo,
         "open_on_complete": False,
         "region": "us-west-2",
-        "credentials": {}
+        "credentials": credentials
     }
 }
 
@@ -157,12 +163,13 @@ def update_credentials(worker_id):
         time.sleep(args.simulate_delay)
 
     # Read AWS Credentials
-    config.read(aws_credential_file)
-    parms["output"]["credentials"] = {
-        "aws_access_key_id": config.get('default', 'aws_access_key_id'),
-        "aws_secret_access_key": config.get('default', 'aws_secret_access_key'),
-        "aws_session_token": config.get('default', 'aws_session_token')
-    }
+    if credentials != None:
+        config.read(aws_credential_file)
+        parms["output"]["credentials"] = {
+            "aws_access_key_id": config.get('default', 'aws_access_key_id'),
+            "aws_secret_access_key": config.get('default', 'aws_secret_access_key'),
+            "aws_session_token": config.get('default', 'aws_session_token')
+        }
 
     # Finish Request
     log.info(f'<{worker_id}> finished update')
@@ -175,8 +182,14 @@ def process_request(worker_id, count, resources):
     # Start Processing
     log.info(f'<{worker_id}> processing {len(resources)} resources: {resources[0]} ...')
 
+    # Set Output Path
+    if credentials != None:
+        parms["output"]["path"] = f'{args.output_path}/{args.name}_{count}.{"parquet" if args.no_geo else "geoparquet"}'
+    else:
+        parms["output"]["path"] = ""
+        parms["output"]["asset"] = "sliderule-stage"
+
     # Make Request
-    parms["output"]["path"] = f'{args.output_path}/{args.name}_{count}.{"parquet" if args.no_geo else "geoparquet"}'
     if args.generate:
         outfile = icesat2.atl03sp(parms, resources=resources)
     else:
