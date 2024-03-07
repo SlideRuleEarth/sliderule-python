@@ -186,7 +186,6 @@ def process_request(worker_id, count, resources):
     if credentials != None:
         parms["output"]["path"] = f'{args.output_path}/{args.name}_{count}.{"parquet" if args.no_geo else "geoparquet"}'
     else:
-        parms["output"]["path"] = ""
         parms["output"]["asset"] = "sliderule-stage"
 
     # Make Request
