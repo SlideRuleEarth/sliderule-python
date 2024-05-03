@@ -7,7 +7,7 @@ Example notebooks that use SlideRule's Python client for processing Earth scienc
 ## Overview
 Detailed [documentation](https://slideruleearth.io/rtd/) on installing and using the SlideRule Python client can be found at [slideruleearth.io](https://slideruleearth.io/).
 
-> NOTE: As of 3/10/2023 the source code for SlideRule's Python client has moved to the [sliderule](https://github.com/ICESat2-SlideRule/sliderule) repository. This [sliderule-python](https://github.com/ICESat2-SlideRule/sliderule-python) repository continues to function as a collection of example notebooks that use the SlideRule Python client and demonstrate common workflows.
+> NOTE: As of 3/10/2023 the source code for SlideRule's Python client has moved to the [sliderule](https://github.com/SlideRuleEarth/sliderule) repository. This [sliderule-python](https://github.com/SlideRuleEarth/sliderule-python) repository continues to function as a collection of example notebooks that use the SlideRule Python client and demonstrate common workflows.
 
 ## Getting Started
 

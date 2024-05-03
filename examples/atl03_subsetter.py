@@ -35,7 +35,7 @@ parser.add_argument('--proj',                 type=str, default=None)
 parser.add_argument('--ignore_poly_for_cmr',  type=bool, default=None)
 parser.add_argument('--name',                 type=str, default='output')
 parser.add_argument('--no_geo',               action='store_true', default=False)
-parser.add_argument('--output_path',    '-p', type=str, default="s3://sliderule/data/stage") # "hosted" tells sliderule to host results in a bucket it owns
+parser.add_argument('--output_path',    '-p', type=str, default="hosted") # "hosted" tells sliderule to host results in a bucket it owns
 parser.add_argument('--timeout',        '-t', type=int, default=600) # seconds
 parser.add_argument('--generate',             action='store_true', default=False)
 parser.add_argument('--simulate_delay',       type=float, default=1)
