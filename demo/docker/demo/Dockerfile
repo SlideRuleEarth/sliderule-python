@@ -16,8 +16,8 @@ RUN conda install -c conda-forge voila
 COPY voila_demo.ipynb /voila_demo.ipynb
 
 # Local install of client (only if necessary)
-COPY sliderule /sliderule
-RUN cd /sliderule/clients/python && pip install .
+#COPY sliderule /sliderule
+#RUN cd /sliderule/clients/python && pip install .
 
 # Entry point
 COPY docker-entrypoint.sh /usr/local/etc/
